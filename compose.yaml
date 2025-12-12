@@ -1,0 +1,33 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./app:/var/www/html
+    networks:
+      stack-network:
+        ipv4_address: 172.20.0.201
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: docker_java
+      MYSQL_DATABASE: stackDB
+      MYSQL_USER: docker_user_java
+      MYSQL_PASSWORD: docker_user_java
+    volumes:
+      - java_db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      stack-network:
+        ipv4_address: 172.20.0.200
+volumes:
+  java_db_data:
+networks:
+  stack-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
